@@ -1,9 +1,8 @@
 {
     "name": "@cloudcomponents/cdk-codepipeline-slack-lambda",
-    "version": "1.0.24",
+    "version": "1.0.25",
     "private": true,
     "license": "MIT",
-    "author": "hello@webappsolutions.de",
     "scripts": {
         "build": "tsc",
         "watch": "tsc -w"
