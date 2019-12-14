@@ -23,7 +23,7 @@
     ],
     "scripts": {
         "pretest": "build-tools zip-lambda",
-        "build": "tsc && build-tools zip-lambda",
+        "build": "build-tools build",
         "watch": "tsc -w"
     },
     "lambdaDependencies": {
