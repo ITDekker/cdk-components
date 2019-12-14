@@ -7,7 +7,7 @@ import { PackageInfo } from './package-info';
 import { execProgram } from './exec-program';
 import { packDirectory } from './pack-directory';
 
-const NAME = 'cloudcomponents';
+const NAME = 'cdk-build-tools';
 
 // eslint-disable-next-line no-console
 console.log(chalk.red(figlet.textSync(NAME)), '\n');
@@ -20,7 +20,13 @@ const main = async (): Promise<void> => {
         .version(version)
         .scriptName(NAME)
         .help('help')
-        .command('build', 'Build a package');
+        .command('build', 'Build a package', (cargv: yargs.Argv) =>
+            cargv.option('only-lambdas', {
+                type: 'boolean',
+                desc: 'Only build and bundle lambdas',
+            }),
+        )
+        .command('watch', ' Start compiler in watch mode');
 
     const packageInfo = await PackageInfo.createInstance();
 
@@ -32,22 +38,28 @@ const main = async (): Promise<void> => {
         case 'build': {
             const lambdaDependencies = packageInfo.getLambdaDependencies();
 
-            Object.keys(lambdaDependencies).forEach(
-                async (lambdaPkg): Promise<void> => {
-                    const lambdaSrc = path.join(
-                        cwd,
-                        'node_modules',
-                        ...lambdaPkg.split('/'),
-                    );
-                    const lambdaDest = path.join(
-                        cwd,
-                        'lambda',
-                        lambdaDependencies[lambdaPkg],
-                    );
+            if (lambdaDependencies) {
+                Object.keys(lambdaDependencies).forEach(
+                    async (lambdaPkg): Promise<void> => {
+                        const lambdaSrc = path.join(
+                            cwd,
+                            'node_modules',
+                            ...lambdaPkg.split('/'),
+                        );
+                        const lambdaDest = path.join(
+                            cwd,
+                            'lambda',
+                            lambdaDependencies[lambdaPkg],
+                        );
 
-                    await packDirectory(lambdaSrc, lambdaDest);
-                },
-            );
+                        await packDirectory(lambdaSrc, lambdaDest);
+                    },
+                );
+            }
+
+            if (argv.onlyLambdas) {
+                return;
+            }
 
             const compiler = packageInfo.getCompiler({ watchMode: false });
             await execProgram(compiler.command, compiler.args);

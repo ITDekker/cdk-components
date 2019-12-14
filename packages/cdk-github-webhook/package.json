@@ -22,7 +22,7 @@
         "lambda"
     ],
     "scripts": {
-        "pretest": "build-tools zip-lambda",
+        "pretest": "build-tools build --only-lambdas",
         "build": "build-tools build",
         "watch": "tsc -w"
     },
