@@ -11,7 +11,7 @@ install:
   - npm run bootstrap
 
 script:
-  - npm run lint:ci
+  - npm run lint
   - npm run test
   - npm run build
 

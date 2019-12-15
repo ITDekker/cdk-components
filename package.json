@@ -11,8 +11,7 @@
         "prepare": "npm run build",
         "all:outdated": "npm outdated; lerna exec --no-bail -- npm outdated",
         "all:upgrade": "npm upgrade; lerna exec --no-bail -- npm upgrade",
-        "lint": "eslint '*/**/*.ts' --cache  --report-unused-disable-directives",
-        "lint:ci": "eslint '*/**/*.ts' --report-unused-disable-directives",
+        "lint": "eslint '*/**/*.ts' --report-unused-disable-directives",
         "lint:fix": "eslint '*/**/*.ts' --cache --fix"
     },
     "devDependencies": {
