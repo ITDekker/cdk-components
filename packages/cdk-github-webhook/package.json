@@ -22,9 +22,9 @@
         "lambda"
     ],
     "scripts": {
-        "pretest": "build-tools build --only-lambdas",
         "build": "build-tools build",
-        "watch": "tsc -w"
+        "watch": "build-tools watch",
+        "test": "build-tools test"
     },
     "lambdaDependencies": {
         "@cloudcomponents/cdk-github-webhook-lambda": "bundle.zip"

@@ -1,16 +1,15 @@
 import * as yargs from 'yargs';
 import * as chalk from 'chalk';
 import * as figlet from 'figlet';
-import * as path from 'path';
+import * as ora from 'ora';
 
 import { PackageInfo } from './package-info';
-import { execProgram } from './exec-program';
-import { packDirectory } from './pack-directory';
+import { Toolkit } from './toolkit';
 
 const NAME = 'cdk-build-tools';
 
 // eslint-disable-next-line no-console
-console.log(chalk.red(figlet.textSync(NAME)), '\n');
+console.log(chalk.blue(figlet.textSync(NAME)), '\n');
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require('../package.json');
@@ -26,49 +25,70 @@ const main = async (): Promise<void> => {
                 desc: 'Only build and bundle lambdas',
             }),
         )
-        .command('watch', ' Start compiler in watch mode');
+        .command('watch', ' Start compiler in watch mode')
+        .command('test', ' Start test');
 
     const packageInfo = await PackageInfo.createInstance();
 
-    const command = argv._[0];
+    const toolkit = new Toolkit(packageInfo);
 
-    const cwd = process.cwd();
+    const command = argv._[0];
 
     switch (command) {
         case 'build': {
-            const lambdaDependencies = packageInfo.getLambdaDependencies();
+            console.log(
+                `Building ${chalk.bold.green(
+                    packageInfo.name,
+                )} version ${chalk.bold.green(packageInfo.version)}...`,
+                '\n',
+            );
 
-            if (lambdaDependencies) {
-                Object.keys(lambdaDependencies).forEach(
-                    async (lambdaPkg): Promise<void> => {
-                        const lambdaSrc = path.join(
-                            cwd,
-                            'node_modules',
-                            ...lambdaPkg.split('/'),
-                        );
-                        const lambdaDest = path.join(
-                            cwd,
-                            'lambda',
-                            lambdaDependencies[lambdaPkg],
-                        );
+            const spinner = ora('Bundle lambdas').start();
 
-                        await packDirectory(lambdaSrc, lambdaDest);
-                    },
-                );
-            }
+            await toolkit.bundleLambdas();
+
+            spinner.succeed();
 
             if (argv.onlyLambdas) {
                 return;
             }
 
-            const compiler = packageInfo.getCompiler({ watchMode: false });
-            await execProgram(compiler.command, compiler.args);
+            spinner.start('Compile package');
+
+            await toolkit.compile(false);
+
+            spinner.succeed();
+
             break;
         }
 
         case 'watch': {
-            const compiler = packageInfo.getCompiler({ watchMode: true });
-            await execProgram(compiler.command, compiler.args);
+            await toolkit.compile(true);
+            break;
+        }
+
+        case 'test': {
+            console.log(
+                `Testing ${chalk.bold.green(
+                    packageInfo.name,
+                )} version ${chalk.bold.green(packageInfo.version)}...`,
+                '\n',
+            );
+
+            const spinner = ora('Bundle lambdas').start();
+
+            await toolkit.bundleLambdas();
+
+            spinner.succeed();
+
+            console.log('\n');
+
+            try {
+                await toolkit.test();
+            } catch (error) {
+                console.error(error);
+            }
+
             break;
         }
 

@@ -30,7 +30,18 @@ export interface PackageJson {
 }
 
 export class PackageInfo {
-    constructor(private readonly pkgJson: PackageJson) {}
+    constructor(
+        public readonly cwd: string,
+        private readonly pkgJson: PackageJson,
+    ) {}
+
+    public get name(): string {
+        return this.pkgJson.name;
+    }
+
+    public get version(): string | undefined {
+        return this.pkgJson.version;
+    }
 
     public isJsii(): boolean {
         return this.pkgJson.jsii !== undefined;
@@ -56,13 +67,11 @@ export class PackageInfo {
         return this.pkgJson.lambdaDependencies;
     }
 
-    public static async createInstance(): Promise<PackageInfo> {
-        const cwd = process.cwd();
+    public static async createInstance(wd?: string): Promise<PackageInfo> {
+        const cwd = wd || process.cwd();
 
-        const pkgJson = JSON.parse(
-            await fs.readFile(path.join(cwd, 'package.json'), 'utf8'),
-        );
+        const pkgJson = await fs.readJSON(path.join(cwd, 'package.json'));
 
-        return new PackageInfo(pkgJson);
+        return new PackageInfo(cwd, pkgJson);
     }
 }
