@@ -8,12 +8,15 @@
         "build": "lerna run build",
         "watch": "lerna run watch --parallel",
         "package": "lerna run package",
-        "prepare": "npm run build",
-        "all:outdated": "npm outdated; lerna exec --no-bail -- npm outdated",
-        "all:upgrade": "npm upgrade; lerna exec --no-bail -- npm upgrade",
+        "all:outdated": "yarn outdated",
+        "all:upgrade": "yarn upgrade-interactive --latest",
         "lint": "eslint '*/**/*.ts' --report-unused-disable-directives",
         "lint:fix": "eslint '*/**/*.ts' --cache --fix"
     },
+    "workspaces": [
+        "packages/*",
+        "examples/*"
+    ],
     "devDependencies": {
         "@types/jest": "^24.0.23",
         "@types/node": "^12.12.14",
