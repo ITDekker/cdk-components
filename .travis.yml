@@ -8,11 +8,10 @@ node_js:
 
 install:
   - yarn install --frozen-lockfile
-  - yarn bootstrap
+  - yarn build
 
 script:
   - yarn lint
   - yarn test
-  - yarn build
 
 cache: yarn
