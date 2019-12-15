@@ -22,7 +22,8 @@
     "scripts": {
         "build": "cdk-build-tools build",
         "watch": "cdk-build-tools watch",
-        "test": "cdk-build-tools test"
+        "test": "cdk-build-tools test",
+        "package": "cdk-build-tools package"
     },
     "peerDependencies": {
         "@aws-cdk/core": "^1.0.0"

@@ -62,6 +62,8 @@ typings/
 
 # custom
 lib
+dist
 lambda
 .DS_Store
+.jsii
 cdk.out

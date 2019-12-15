@@ -28,7 +28,8 @@
     "scripts": {
         "build": "cdk-build-tools build",
         "watch": "cdk-build-tools watch",
-        "test": "cdk-build-tools test"
+        "test": "cdk-build-tools test",
+        "package": "cdk-build-tools package"
     },
     "lambdaDependencies": {
         "@cloudcomponents/cdk-codepipeline-slack-lambda": "bundle.zip"

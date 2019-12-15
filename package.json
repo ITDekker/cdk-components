@@ -7,6 +7,7 @@
         "test": "jest",
         "build": "lerna run build",
         "watch": "lerna run watch --parallel",
+        "package": "lerna run package",
         "prepare": "npm run build",
         "all:outdated": "npm outdated; lerna exec --no-bail -- npm outdated",
         "all:upgrade": "npm upgrade; lerna exec --no-bail -- npm upgrade",

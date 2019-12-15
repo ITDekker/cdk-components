@@ -25,7 +25,8 @@
     "scripts": {
         "build": "cdk-build-tools build",
         "watch": "cdk-build-tools watch",
-        "test": "cdk-build-tools test"
+        "test": "cdk-build-tools test",
+        "package": "cdk-build-tools package"
     },
     "dependencies": {
         "@aws-cdk/aws-codebuild": "^1.18.0",
